@@ -35,20 +35,23 @@ public class WeChatServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         System.out.println("请求进入");
-        String result = "";
+        String responseMessage;
         try {
+            //解析微信发来的请求,将解析后的结果封装成Map返回
             Map<String,String> map = MessageHandlerUtil.parseXml(request);
-            System.out.println("开始构造消息");
-            result = MessageHandlerUtil.buildXml(map);
-            System.out.println(result);
-            if(result.equals("")){
-                result = "未正确响应";
+            System.out.println("开始构造响应消息");
+            responseMessage = MessageHandlerUtil.buildResponseMessage(map);
+            System.out.println(responseMessage);
+            if(responseMessage.equals("")){
+                responseMessage ="未正确响应";
             }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("发生异常："+ e.getMessage());
+            responseMessage ="未正确响应";
         }
-        response.getWriter().println(result);
+        //发送响应消息
+        response.getWriter().println(responseMessage);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,4 +126,5 @@ public class WeChatServlet extends HttpServlet {
         }
         return "";
     }
+
 }
