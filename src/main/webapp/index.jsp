@@ -1,8 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="cn.maluit.WeChat.Common.AccessTokenInfo" %>
 <html>
 <head>
-    <meta charset="UTF-8"/>
+    <title>Wechat</title>
 </head>
 <body>
-<h2>微信接口</h2>
+微信接口测试
+<hr/>
+access_token为：<%=AccessTokenInfo.accessToken.getAccessToken()%>
 </body>
 </html>

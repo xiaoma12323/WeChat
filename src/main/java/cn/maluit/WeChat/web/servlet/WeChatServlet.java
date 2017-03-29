@@ -1,5 +1,7 @@
 package cn.maluit.WeChat.web.servlet;
 
+import cn.maluit.WeChat.util.MessageHandlerUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Created by mi on 2017/3/28.
@@ -23,8 +26,29 @@ public class WeChatServlet extends HttpServlet {
      */
     private final String TOKEN = "qwerty";
 
+    /**
+     * 处理微信服务器发来的消息
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        // TODO 接收、处理、响应由微信服务器转发的用户发送给公众帐号的消息
+        // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        System.out.println("请求进入");
+        String result = "";
+        try {
+            Map<String,String> map = MessageHandlerUtil.parseXml(request);
+            System.out.println("开始构造消息");
+            result = MessageHandlerUtil.buildXml(map);
+            System.out.println(result);
+            if(result.equals("")){
+                result = "未正确响应";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("发生异常："+ e.getMessage());
+        }
+        response.getWriter().println(result);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
