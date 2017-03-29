@@ -1,31 +1,27 @@
 package cn.maluit.WeChat.web.servlet;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 /**
  * Created by mi on 2017/3/28.
- */
-
-        import javax.servlet.ServletException;
-        import javax.servlet.annotation.WebServlet;
-        import javax.servlet.http.HttpServlet;
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
-        import java.io.IOException;
-        import java.security.MessageDigest;
-        import java.security.NoSuchAlgorithmException;
-        import java.util.Arrays;
-
-/**
- * Created by xdp on 2016/1/25.
  * 使用@WebServlet注解配置WeChatServlet,urlPatterns属性指明了WeChatServlet的访问路径
  */
-@WebServlet(urlPatterns="/WeChatServlet")
+@WebServlet(urlPatterns = "/WeChatServlet")
 public class WeChatServlet extends HttpServlet {
 
     /**
      * Token可由开发者可以任意填写，用作生成签名（该Token会和接口URL中包含的Token进行比对，从而验证安全性）
-     * 比如这里我将Token设置为gacl
+     * 比如这里我将Token设置为qwerty
      */
-    private final String TOKEN = "gacl";
+    private final String TOKEN = "qwerty";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
