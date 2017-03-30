@@ -2,9 +2,8 @@ package cn.maluit.WeChat.util;
 
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -15,9 +14,12 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.*;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -27,6 +29,8 @@ import java.security.cert.X509Certificate;
  * Created by mi on 2017/3/29.
  */
 public class WeChatApiUtil {
+
+    private static Logger log = LoggerFactory.getLogger(WeChatApiUtil.class);
     // token 接口(GET)
     private static final String ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
     // 素材上传(POST)https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE
@@ -52,8 +56,7 @@ public class WeChatApiUtil {
         String appSecret="ac24c6bcd94c3ca27d7b69732bb67516";
         AccessToken token = null;
         String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
-        String response = httpsRequestToString(tockenUrl, "GET", null);
-        JSONObject jsonObject = JSON.parseObject(response);
+        JSONObject jsonObject = httpsRequest(tockenUrl, "GET", null);
         if (null != jsonObject) {
             try {
                 token.setAccessToken(jsonObject.getString("access_token"));
@@ -103,7 +106,7 @@ public class WeChatApiUtil {
             int status = httpClient.executeMethod(post);
             if (status == HttpStatus.SC_OK) {
                 String text = post.getResponseBodyAsString();
-                jsonObject = JSONObject.parseObject(text);
+                jsonObject = JSONObject.fromObject(text);
             } else {
                 System.out.println("upload Media failure status is:" + status);
             }
@@ -207,76 +210,138 @@ public class WeChatApiUtil {
      */
     public static JSONObject uploadMedia(String filePath, String type) {
         File f = new File(filePath); // 获取本地文件
-        String appId = "wxbe4d433e857e8bb1";
-        String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
         String token = WeChatApiUtil.getToken().getAccessToken();
         JSONObject jsonObject = uploadMedia(f, token, type);
         return jsonObject;
     }
 
-    /**
-     * 发送请求以https方式发送请求并将请求响应内容以String方式返回
-     *
-     * @param path   请求路径
-     * @param method 请求方法
-     * @param body   请求数据体
-     * @return 请求响应内容转换成字符串信息
-     */
-    public static String httpsRequestToString(String path, String method, String body) {
-        if (path == null || method == null) {
-            return null;
-        }
+//    /**
+//     * 发送请求以https方式发送请求并将请求响应内容以String方式返回
+//     *
+//     * @param path   请求路径
+//     * @param method 请求方法
+//     * @param body   请求数据体
+//     * @return 请求响应内容转换成字符串信息
+//     */
+//    public static String httpsRequestToString(String path, String method, String body) {
+//        if (path == null || method == null) {
+//            return null;
+//        }
+//
+//        String response = null;
+//        InputStream inputStream = null;
+//        InputStreamReader inputStreamReader = null;
+//        BufferedReader bufferedReader = null;
+//        HttpsURLConnection conn = null;
+//        try {
+//            TrustManager[] tm = {new JEEWeiXinX509TrustManager()};
+//            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+//            sslContext.init(null, tm, new java.security.SecureRandom());
+//            SSLSocketFactory ssf = sslContext.getSocketFactory();
+//            System.out.println(path);
+//            URL url = new URL(path);
+//            conn = (HttpsURLConnection) url.openConnection();
+//            conn.setSSLSocketFactory(ssf);
+//
+//            conn.setDoOutput(true);
+//            conn.setDoInput(true);
+//            conn.setUseCaches(false);
+//            conn.setRequestMethod(method);
+//            if (null != body) {
+//                OutputStream outputStream = conn.getOutputStream();
+//                outputStream.write(body.getBytes("UTF-8"));
+//                outputStream.close();
+//            }
+//
+//            inputStream = conn.getInputStream();
+//            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//            bufferedReader = new BufferedReader(inputStreamReader);
+//            String str = null;
+//            StringBuffer buffer = new StringBuffer();
+//            while ((str = bufferedReader.readLine()) != null) {
+//                buffer.append(str);
+//            }
+//
+//            response = buffer.toString();
+//        } catch (Exception e) {
+//
+//        } finally {
+//            if (conn != null) {
+//                conn.disconnect();
+//            }
+//            try {
+//                bufferedReader.close();
+//                inputStreamReader.close();
+//                inputStream.close();
+//            } catch (IOException execption) {
+//
+//            }
+//        }
+//        return response;
+//    }
 
-        String response = null;
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        HttpsURLConnection conn = null;
+    /**
+     * 发起https请求并获取结果
+     *
+     * @param requestUrl 请求地址
+     * @param requestMethod 请求方式（GET、POST）
+     * @param outputStr 提交的数据
+     * @return JSONObject(通过JSONObject.get(key)的方式获取json对象的属性值)
+     */
+    public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
+        JSONObject jsonObject = null;
+        StringBuffer buffer = new StringBuffer();
         try {
-            TrustManager[] tm = {new JEEWeiXinX509TrustManager()};
+            // 创建SSLContext对象，并使用我们指定的信任管理器初始化
+            TrustManager[] tm = { new JEEWeiXinX509TrustManager() };
             SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
             sslContext.init(null, tm, new java.security.SecureRandom());
+            // 从上述SSLContext对象中得到SSLSocketFactory对象
             SSLSocketFactory ssf = sslContext.getSocketFactory();
-            System.out.println(path);
-            URL url = new URL(path);
-            conn = (HttpsURLConnection) url.openConnection();
-            conn.setSSLSocketFactory(ssf);
 
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(method);
-            if (null != body) {
-                OutputStream outputStream = conn.getOutputStream();
-                outputStream.write(body.getBytes("UTF-8"));
+            URL url = new URL(requestUrl);
+            HttpsURLConnection httpUrlConn = (HttpsURLConnection) url.openConnection();
+            httpUrlConn.setSSLSocketFactory(ssf);
+
+            httpUrlConn.setDoOutput(true);
+            httpUrlConn.setDoInput(true);
+            httpUrlConn.setUseCaches(false);
+            // 设置请求方式（GET/POST）
+            httpUrlConn.setRequestMethod(requestMethod);
+
+            if ("GET".equalsIgnoreCase(requestMethod))
+                httpUrlConn.connect();
+
+            // 当有数据需要提交时
+            if (null != outputStr) {
+                OutputStream outputStream = httpUrlConn.getOutputStream();
+                // 注意编码格式，防止中文乱码
+                outputStream.write(outputStr.getBytes("UTF-8"));
                 outputStream.close();
             }
 
-            inputStream = conn.getInputStream();
-            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-            bufferedReader = new BufferedReader(inputStreamReader);
+            // 将返回的输入流转换成字符串
+            InputStream inputStream = httpUrlConn.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
             String str = null;
-            StringBuffer buffer = new StringBuffer();
             while ((str = bufferedReader.readLine()) != null) {
                 buffer.append(str);
             }
-
-            response = buffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+            // 释放资源
+            inputStream.close();
+            inputStream = null;
+            httpUrlConn.disconnect();
+            jsonObject = JSONObject.fromObject(buffer.toString());
+        } catch (ConnectException ce) {
+            log.error("WeChat server connection timed out.");
         } catch (Exception e) {
-
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-            try {
-                bufferedReader.close();
-                inputStreamReader.close();
-                inputStream.close();
-            } catch (IOException execption) {
-
-            }
+            log.error("https request error:{}", e);
         }
-        return response;
+        return jsonObject;
     }
 /*
 

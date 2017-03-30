@@ -17,13 +17,8 @@ public class MenuManager {
     private static Logger log = LoggerFactory.getLogger(MenuManager.class);
 
     public static void main(String[] args) {
-        // 第三方用户唯一凭证
-        String appId = "000000000000000000";
-        // 第三方用户唯一凭证密钥
-        String appSecret = "00000000000000000000000000000000";
-
         // 调用接口获取access_token
-        WeChatApiUtil.getToken(appId, appSecret);
+        WeChatApiUtil.getToken();
         AccessToken at = AccessTokenInfo.accessToken;
 
         if (null != at) {
@@ -57,7 +52,7 @@ public class MenuManager {
         // 将菜单对象转换成json字符串
         String jsonMenu = JSONObject.fromObject(menu).toString();
         // 调用接口创建菜单
-        JSONObject jsonObject = httpRequest(url, "POST", jsonMenu);
+        JSONObject jsonObject = WeChatApiUtil.httpsRequest(url, "POST", jsonMenu);
 
         if (null != jsonObject) {
             if (0 != jsonObject.getInt("errcode")) {

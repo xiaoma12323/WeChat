@@ -4,7 +4,6 @@ package cn.maluit.WeChat.web.servlet;
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.util.WeChatApiUtil;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +27,6 @@ public class AccessTokenServlet extends HttpServlet {
     public void init() throws ServletException {
         System.out.println("启动WebServlet");
         super.init();
-
-        final String appId = getInitParameter("appId");
-        final String appSecret = getInitParameter("appSecret");
 
         //开启一个新的线程
         new Thread(new Runnable() {
