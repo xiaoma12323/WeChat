@@ -1,6 +1,7 @@
 package cn.maluit.WeChat.menu;
 
 import cn.maluit.WeChat.entry.AccessToken;
+import cn.maluit.WeChat.util.NetWorkHelper;
 import cn.maluit.WeChat.util.WeChatApiUtil;
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 
@@ -52,7 +53,7 @@ public class MenuManager {
         // 将菜单对象转换成json字符串
         String jsonMenu = JSONObject.fromObject(menu).toString();
         // 调用接口创建菜单
-        JSONObject jsonObject = WeChatApiUtil.httpsRequest(url, "POST", jsonMenu);
+        JSONObject jsonObject = NetWorkHelper.httpsRequest(url, "POST", jsonMenu);
 
         if (null != jsonObject) {
             if (0 != jsonObject.getInt("errcode")) {

@@ -8,5 +8,7 @@
 微信接口测试
 <hr/>
 access_token为：<%=AccessTokenInfo.accessToken.getAccessToken()%>
+<hr/>
+expires_in:<%=AccessTokenInfo.accessToken.getExpiresin()%>
 </body>
 </html>
