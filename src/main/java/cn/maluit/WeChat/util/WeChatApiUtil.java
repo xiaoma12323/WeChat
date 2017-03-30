@@ -47,6 +47,7 @@ public class WeChatApiUtil {
      * @param appSecret
      * @return
      */
+//    TODO 这个多余
     public static String getToken(String appId, String appSecret) {
         if (appId == null || appSecret == null) {
             return null;
