@@ -1,6 +1,10 @@
 package cn.maluit.WeChat.menu;
 
+import cn.maluit.WeChat.entry.AccessToken;
+import cn.maluit.WeChat.util.WeChatApiUtil;
+import cn.maluit.WeChat.Common.AccessTokenInfo;
 
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +23,12 @@ public class MenuManager {
         String appSecret = "00000000000000000000000000000000";
 
         // 调用接口获取access_token
-        AccessToken at = WeixinUtil.getAccessToken(appId, appSecret);
+        WeChatApiUtil.getToken(appId, appSecret);
+        AccessToken at = AccessTokenInfo.accessToken;
 
         if (null != at) {
             // 调用接口创建菜单
-            int result = WeixinUtil.createMenu(getMenu(), at.getToken());
+            int result = createMenu(getMenu(), at.getAccessToken());
 
             // 判断菜单创建结果
             if (0 == result)
@@ -31,6 +36,37 @@ public class MenuManager {
             else
                 log.info("菜单创建失败，错误码：" + result);
         }
+    }
+
+
+    // 菜单创建（POST） 限100（次/天）
+    public static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+
+    /**
+     * 创建菜单
+     *
+     * @param menu        菜单实例
+     * @param accessToken 有效的access_token
+     * @return 0表示成功，其他值表示失败
+     */
+    public static int createMenu(Menu menu, String accessToken) {
+        int result = 0;
+
+        // 拼装创建菜单的url
+        String url = menu_create_url.replace("ACCESS_TOKEN", accessToken);
+        // 将菜单对象转换成json字符串
+        String jsonMenu = JSONObject.fromObject(menu).toString();
+        // 调用接口创建菜单
+        JSONObject jsonObject = httpRequest(url, "POST", jsonMenu);
+
+        if (null != jsonObject) {
+            if (0 != jsonObject.getInt("errcode")) {
+                result = jsonObject.getInt("errcode");
+                log.error("创建菜单失败 errcode:{} errmsg:{}", jsonObject.getInt("errcode"), jsonObject.getString("errmsg"));
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -107,24 +143,24 @@ public class MenuManager {
         ComplexButton mainBtn1 = new ComplexButton();
         mainBtn1.setName("生活助手");
         //一级下有4个子菜单
-        mainBtn1.setSub_button(new CommonButton[] { btn11, btn12, btn13, btn14 });
+        mainBtn1.setSub_button(new CommonButton[]{btn11, btn12, btn13, btn14});
 
 
         ComplexButton mainBtn2 = new ComplexButton();
         mainBtn2.setName("休闲驿站");
-        mainBtn2.setSub_button(new CommonButton[] { btn21, btn22, btn23, btn24, btn25 });
+        mainBtn2.setSub_button(new CommonButton[]{btn21, btn22, btn23, btn24, btn25});
 
 
         ComplexButton mainBtn3 = new ComplexButton();
         mainBtn3.setName("更多体验");
-        mainBtn3.setSub_button(new CommonButton[] { btn31, btn32, btn33 });
+        mainBtn3.setSub_button(new CommonButton[]{btn31, btn32, btn33});
 
 
         /**
          * 封装整个菜单
          */
         Menu menu = new Menu();
-        menu.setButton(new Button[] { mainBtn1, mainBtn2, mainBtn3 });
+        menu.setButton(new Button[]{mainBtn1, mainBtn2, mainBtn3});
 
         return menu;
     }

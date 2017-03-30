@@ -1,11 +1,9 @@
 package cn.maluit.WeChat.web.servlet;
 
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import cn.maluit.WeChat.Common.AccessTokenInfo;
-import cn.maluit.WeChat.entry.AccessToken;
-import cn.maluit.WeChat.util.NetWorkHelper;
+import cn.maluit.WeChat.util.WeChatApiUtil;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -41,7 +39,7 @@ public class AccessTokenServlet extends HttpServlet {
                 while (true) {
                     try {
                         //获取accessToken
-                        AccessTokenInfo.accessToken = getAccessToken(appId, appSecret);
+                        AccessTokenInfo.accessToken = WeChatApiUtil.getToken();
                         //获取成功
                         if (AccessTokenInfo.accessToken != null) {
                             //获取到access_token 休眠7000秒,大约2个小时左右
@@ -66,25 +64,27 @@ public class AccessTokenServlet extends HttpServlet {
         }).start();
     }
 
-    /**
-     * 获取access_token
-     *
-     * @return AccessToken
-     */
-    private AccessToken getAccessToken(String appId, String appSecret) {
-        NetWorkHelper netHelper = new NetWorkHelper();
-        /**
-         * 接口地址为https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET，其中grant_type固定写为client_credential即可。
-         */
-        String Url = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret);
-        //此请求为https的get请求，返回的数据格式为{"access_token":"ACCESS_TOKEN","expires_in":7200}
-        String result = netHelper.getHttpsResponse(Url, "");
-        System.out.println("获取到的access_token=" + result);
-        //使用FastJson将Json字符串解析成Json对象
-        JSONObject json = JSON.parseObject(result);
-        AccessToken token = new AccessToken();
-        token.setAccessToken(json.getString("access_token"));
-        token.setExpiresin(json.getInteger("expires_in"));
-        return token;
-    }
+
+
+//    /**
+//     * 获取access_token
+//     *
+//     * @return AccessToken
+//     */
+//    private AccessToken getAccessToken(String appId, String appSecret) {
+//        NetWorkHelper netHelper = new NetWorkHelper();
+//        /**
+//         * 接口地址为https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET，其中grant_type固定写为client_credential即可。
+//         */
+//        String Url = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret);
+//        //此请求为https的get请求，返回的数据格式为{"access_token":"ACCESS_TOKEN","expires_in":7200}
+//        String result = netHelper.getHttpsResponse(Url, "");
+//        System.out.println("获取到的access_token=" + result);
+//        //使用FastJson将Json字符串解析成Json对象
+//        JSONObject json = JSON.parseObject(result);
+//        AccessToken token = new AccessToken();
+//        token.setAccessToken(json.getString("access_token"));
+//        token.setExpiresin(json.getInteger("expires_in"));
+//        return token;
+//    }
 }

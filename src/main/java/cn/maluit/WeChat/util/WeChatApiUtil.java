@@ -1,5 +1,7 @@
 package cn.maluit.WeChat.util;
 
+import cn.maluit.WeChat.Common.AccessTokenInfo;
+import cn.maluit.WeChat.entry.AccessToken;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -43,27 +45,23 @@ public class WeChatApiUtil {
     /**
      * 通用接口获取Token凭证
      *
-     * @param appId
-     * @param appSecret
      * @return
      */
-//    TODO 这个多余
-    public static String getToken(String appId, String appSecret) {
-        if (appId == null || appSecret == null) {
-            return null;
-        }
-
-        String token = null;
+    public static AccessToken getToken() {
+        String appId="wxddd6a4773cca9ff3";
+        String appSecret="ac24c6bcd94c3ca27d7b69732bb67516";
+        AccessToken token = null;
         String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
         String response = httpsRequestToString(tockenUrl, "GET", null);
         JSONObject jsonObject = JSON.parseObject(response);
         if (null != jsonObject) {
             try {
-                token = jsonObject.getString("access_token");
+                token.setAccessToken(jsonObject.getString("access_token"));
             } catch (JSONException e) {
                 token = null;// 获取token失败
             }
         }
+        AccessTokenInfo.accessToken = token;
         return token;
     }
 
@@ -134,20 +132,6 @@ public class WeChatApiUtil {
         return httpRequestToFile(fileName, url, "GET", null);
     }
 
-    /**
-     * 多媒体下载接口
-     *
-     * @param fileName 素材存储文件路径
-     * @param mediaId  素材ID（对应上传后获取到的ID）
-     * @return 素材文件
-     * @comment 不支持视频文件的下载
-     */
-    public static File downloadMedia(String fileName, String mediaId) {
-        String appId = "wxbe4d433e857e8bb1";
-        String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
-        String token = WeChatApiUtil.getToken(appId, appSecret);
-        return downloadMedia(fileName, token, mediaId);
-    }
 
     /**
      * 以http方式发送请求,并将请求响应内容输出到文件
@@ -225,7 +209,7 @@ public class WeChatApiUtil {
         File f = new File(filePath); // 获取本地文件
         String appId = "wxbe4d433e857e8bb1";
         String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
-        String token = WeChatApiUtil.getToken(appId, appSecret);
+        String token = WeChatApiUtil.getToken().getAccessToken();
         JSONObject jsonObject = uploadMedia(f, token, type);
         return jsonObject;
     }
