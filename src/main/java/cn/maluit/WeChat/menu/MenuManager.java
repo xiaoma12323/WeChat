@@ -1,10 +1,9 @@
 package cn.maluit.WeChat.menu;
 
+import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
 import cn.maluit.WeChat.util.NetWorkHelper;
-import cn.maluit.WeChat.util.WeChatApiUtil;
-import cn.maluit.WeChat.Common.AccessTokenInfo;
-
+import cn.maluit.WeChat.web.servlet.AccessTokenServlet;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ public class MenuManager {
 
     public static void main(String[] args) {
         // 调用接口获取access_token
-        WeChatApiUtil.getToken();
+        AccessTokenServlet.getToken();
         AccessToken at = AccessTokenInfo.accessToken;
 
         if (null != at) {

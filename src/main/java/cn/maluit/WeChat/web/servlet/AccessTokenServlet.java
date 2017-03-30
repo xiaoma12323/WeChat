@@ -1,11 +1,13 @@
 package cn.maluit.WeChat.web.servlet;
 
-
 import cn.maluit.WeChat.Common.AccessTokenInfo;
+import cn.maluit.WeChat.entry.AccessToken;
+import cn.maluit.WeChat.util.NetWorkHelper;
 import cn.maluit.WeChat.util.WeChatApiUtil;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
@@ -16,11 +18,8 @@ import javax.servlet.http.HttpServlet;
 @WebServlet(
         name = "AccessTokenServlet",
         urlPatterns = {"/AccessTokenServlet"},
-        loadOnStartup = 1,
-        initParams = {
-                @WebInitParam(name = "appId", value = "wxddd6a4773cca9ff3"),
-                @WebInitParam(name = "appSecret", value = "ac24c6bcd94c3ca27d7b69732bb67516")
-        })
+        loadOnStartup = 1
+)
 public class AccessTokenServlet extends HttpServlet {
 
     @Override
@@ -35,7 +34,7 @@ public class AccessTokenServlet extends HttpServlet {
                 while (true) {
                     try {
                         //获取accessToken
-                        AccessTokenInfo.accessToken = WeChatApiUtil.getToken();
+                        AccessTokenInfo.accessToken = getToken();
                         //获取成功
                         if (AccessTokenInfo.accessToken != null) {
                             //获取到access_token 休眠7000秒,大约2个小时左右
@@ -58,6 +57,32 @@ public class AccessTokenServlet extends HttpServlet {
 
             }
         }).start();
+    }
+
+    /**
+     * 通用接口获取Token凭证
+     *
+     * @return
+     */
+    public static AccessToken getToken() {
+        String appId = "wxddd6a4773cca9ff3";
+        String appSecret = "ac24c6bcd94c3ca27d7b69732bb67516";
+        AccessToken token = null;
+        String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
+        JSONObject jsonObject = NetWorkHelper.httpsRequest(tockenUrl, "GET", null);
+        if (null != jsonObject) {
+            try {
+                token = new AccessToken();
+                System.out.println(jsonObject.toString());
+                token.setAccessToken(jsonObject.getString("access_token"));
+                token.setExpiresin(jsonObject.getInt("expires_in"));
+
+            } catch (JSONException e) {
+                token = null;// 获取token失败
+            }
+        }
+        AccessTokenInfo.accessToken = token;
+        return token;
     }
 
 

@@ -3,6 +3,7 @@ package cn.maluit.WeChat.util;
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
 
+import cn.maluit.WeChat.web.servlet.AccessTokenServlet;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.apache.commons.httpclient.HttpClient;
@@ -42,30 +43,7 @@ public class WeChatApiUtil {
         return String.format(DOWNLOAD_MEDIA, token, mediaId);
     }
 
-    /**
-     * 通用接口获取Token凭证
-     *
-     * @return
-     */
-    public static AccessToken getToken() {
-        String appId = "wxddd6a4773cca9ff3";
-        String appSecret = "ac24c6bcd94c3ca27d7b69732bb67516";
-        AccessToken token = null;
-        String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
-        JSONObject jsonObject = NetWorkHelper.httpsRequest(tockenUrl, "GET", null);
-        if (null != jsonObject) {
-            try {
-                token = new AccessToken();
-                token.setAccessToken(jsonObject.getString("access_token"));
-                token.setExpiresin(jsonObject.getInt("expires_in"));
 
-            } catch (JSONException e) {
-                token = null;// 获取token失败
-            }
-        }
-        AccessTokenInfo.accessToken = token;
-        return token;
-    }
 
     /**
      * 微信服务器素材上传
@@ -134,6 +112,20 @@ public class WeChatApiUtil {
         return httpRequestToFile(fileName, url, "GET", null);
     }
 
+    /**
+     * 上传素材
+     *
+     * @param filePath 媒体文件路径(绝对路径)
+     * @param type     媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）
+     * @return
+     */
+    public static JSONObject uploadMedia(String filePath, String type) {
+        File f = new File(filePath); // 获取本地文件
+        String token = AccessTokenServlet.getToken().getAccessToken();
+        JSONObject jsonObject = uploadMedia(f, token, type);
+        return jsonObject;
+    }
+
 
     /**
      * 以http方式发送请求,并将请求响应内容输出到文件
@@ -200,19 +192,6 @@ public class WeChatApiUtil {
         return file;
     }
 
-    /**
-     * 上传素材
-     *
-     * @param filePath 媒体文件路径(绝对路径)
-     * @param type     媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb）
-     * @return
-     */
-    public static JSONObject uploadMedia(String filePath, String type) {
-        File f = new File(filePath); // 获取本地文件
-        String token = WeChatApiUtil.getToken().getAccessToken();
-        JSONObject jsonObject = uploadMedia(f, token, type);
-        return jsonObject;
-    }
 
 //    /**
 //     * 发送请求以https方式发送请求并将请求响应内容以String方式返回
@@ -305,7 +284,7 @@ public class WeChatApiUtil {
     */
 }
 
-class JEEWeiXinX509TrustManager implements X509TrustManager {
+class JEEWeChatX509TrustManager implements X509TrustManager {
     public void checkClientTrusted(X509Certificate[] chain, String authType)
             throws CertificateException {
     }

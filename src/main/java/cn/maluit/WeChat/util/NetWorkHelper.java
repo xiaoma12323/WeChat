@@ -35,7 +35,7 @@ public class NetWorkHelper {
         StringBuffer buffer = new StringBuffer();
         try {
             // 创建SSLContext对象，并使用我们指定的信任管理器初始化
-            TrustManager[] tm = {new JEEWeiXinX509TrustManager()};
+            TrustManager[] tm = {new JEEWeChatX509TrustManager()};
             SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
             sslContext.init(null, tm, new java.security.SecureRandom());
             // 从上述SSLContext对象中得到SSLSocketFactory对象
