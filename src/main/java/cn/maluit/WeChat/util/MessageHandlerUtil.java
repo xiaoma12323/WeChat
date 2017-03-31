@@ -1,7 +1,7 @@
 package cn.maluit.WeChat.util;
 
-import cn.maluit.WeChat.Common.MessageType;
 import cn.maluit.WeChat.Common.EventType;
+import cn.maluit.WeChat.Common.MessageType;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;

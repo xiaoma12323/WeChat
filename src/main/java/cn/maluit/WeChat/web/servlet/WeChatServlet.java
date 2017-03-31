@@ -37,15 +37,15 @@ public class WeChatServlet extends HttpServlet {
         String responseMessage;
         try {
             //解析微信发来的请求,将解析后的结果封装成Map返回
-            Map<String,String> map = MessageHandlerUtil.parseXml(request);
+            Map<String, String> map = MessageHandlerUtil.parseXml(request);
             responseMessage = MessageHandlerUtil.buildResponseMessage(map);
-            if(responseMessage.equals("")){
-                responseMessage ="未正确响应";
+            if (responseMessage.equals("")) {
+                responseMessage = "未正确响应";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("发生异常："+ e.getMessage());
-            responseMessage ="未正确响应";
+            System.out.println("发生异常：" + e.getMessage());
+            responseMessage = "未正确响应";
         }
         //发送响应消息
         response.getWriter().println(responseMessage);
