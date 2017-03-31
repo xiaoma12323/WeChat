@@ -1,6 +1,7 @@
 package cn.maluit.WeChat.util;
 
 import cn.maluit.WeChat.Common.MessageType;
+import cn.maluit.WeChat.Common.EventType;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -32,7 +33,6 @@ public class MessageHandlerUtil {
         Map<String, String> map = new HashMap();
         // 从request中取得输入流
         InputStream inputStream = request.getInputStream();
-        System.out.println("获取输入流");
         // 读取输入流
         SAXReader reader = new SAXReader();
         Document document = reader.read(inputStream);
@@ -63,7 +63,6 @@ public class MessageHandlerUtil {
         String responseMessage = "";
         //得到消息类型
         String msgType = map.get("MsgType").toString();
-        System.out.println("MsgType:" + msgType);
         //消息类型
         MessageType messageEnumType = MessageType.valueOf(MessageType.class, msgType.toUpperCase());
         switch (messageEnumType) {
@@ -514,11 +513,52 @@ public class MessageHandlerUtil {
      * @return
      */
     private static String handleEventMessage(Map<String, String> map) {
-        String eventkey=map.get("Eventkey");
-        System.out.println(eventkey);
-        //String responseMessage = buildWelcomeTextMessage(map);
-        //return responseMessage;
-        return eventkey;
+        //响应消息
+        String responseMessage="";
+        //得到事件类型
+        String eventType=map.get("Event");
+        //事件类型
+        EventType eventEnumType = EventType.valueOf(EventType.class, eventType.toUpperCase());
+        switch (eventEnumType){
+            case SUBSCRIBE:
+                //处理订阅事件
+                responseMessage=buildWelcomeTextMessage(map);
+                break;
+            case UNSUBCRIBE:
+                //处理取消订阅事件
+                break;
+            case SCAN:
+                //处理扫描带参数的二维码事件
+                break;
+            case LOCATION:
+                //处理上传位置信息事件
+                break;
+            case CLICK:
+                //处理菜单拉取消息事件
+                //事件Key值
+                String eventKey=map.get("EventKey");
+                switch (eventKey){
+                    case "31":
+                        responseMessage=buildTextMessage(map,"事件1");
+                        break;
+                    case "32":
+                        responseMessage=buildTextMessage(map,"事件2");
+                        break;
+                    case "33":
+                        responseMessage=buildTextMessage(map,"事件3");
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case VIEW:
+                //处理菜单跳转事件
+                break;
+            default:
+                break;
+        }
+        //返回响应消息
+        return responseMessage;
     }
 
 
