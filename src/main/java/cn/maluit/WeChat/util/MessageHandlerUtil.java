@@ -125,7 +125,7 @@ public class MessageHandlerUtil {
                                 "<Content><![CDATA[%s]]></Content>" +
                                 "</xml>",
                         fromUserName, toUserName, getMessageCreateTime(),
-                        "感谢您关注山西马路信息科技有限公司");
+                        "感谢您关注山西马路信息技术有限公司");
         return responseMessageXml;
     }
 
@@ -381,19 +381,19 @@ public class MessageHandlerUtil {
                         "<a href=\"http://www.maluit.cn/WeChat\">马路信息</a>";
                 responseMessage = buildTextMessage(map, msgText);
                 break;
-            case "图片":
-                //通过素材管理接口上传图片时得到的media_id
-                String imgMediaId = "dSQCiEHYB-pgi7ib5KpeoFlqpg09J31H28rex6xKgwWrln3HY0BTsoxnRV-xC_SQ";
-                responseMessage = buildImageMessage(map, imgMediaId);
-                break;
-            case "语音":
-                //通过素材管理接口上传语音文件时得到的media_id
-                String voiceMediaId = "h3ul0TnwaRPut6Tl1Xlf0kk_9aUqtQvfM5Oq21unoWqJrwks505pkMGMbHnCHBBZ";
-                responseMessage = buildVoiceMessage(map, voiceMediaId);
-                break;
-            case "图文":
-                responseMessage = buildNewsMessage(map);
-                break;
+//            case "图片":
+//                //通过素材管理接口上传图片时得到的media_id
+//                String imgMediaId = "";
+//                responseMessage = buildImageMessage(map, imgMediaId);
+//                break;
+//            case "语音":
+//                //通过素材管理接口上传语音文件时得到的media_id
+//                String voiceMediaId = "";
+//                responseMessage = buildVoiceMessage(map, voiceMediaId);
+//                break;
+//            case "图文":
+//                responseMessage = buildNewsMessage(map);
+//                break;
             case "音乐":
                 Music music = new Music();
                 music.title = "超级玛丽";
@@ -402,13 +402,13 @@ public class MessageHandlerUtil {
                 music.hqMusicUrl = "http://www.maluit.cn/music/电子版 - 超级玛丽.mp3";
                 responseMessage = buildMusicMessage(map, music);
                 break;
-            case "视频":
-                Video video = new Video();
-                video.mediaId = "GqmIGpLu41rtwaY7WCVtJAL3ZbslzKiuLEXfWIKYDnHXGObH1CBH71xtgrGwyCa3";
-                video.title = "视频";
-                video.description = "搞笑视频";
-                responseMessage = buildVideoMessage(map, video);
-                break;
+//            case "视频":
+//                Video video = new Video();
+//                video.mediaId = "";
+//                video.title = "视频";
+//                video.description = "视频";
+//                responseMessage = buildVideoMessage(map, video);
+//                break;
             default:
                 responseMessage = buildWelcomeTextMessage(map);
                 break;
