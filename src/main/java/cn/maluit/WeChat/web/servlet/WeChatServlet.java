@@ -41,7 +41,6 @@ public class WeChatServlet extends HttpServlet {
             Map<String,String> map = MessageHandlerUtil.parseXml(request);
             System.out.println("开始构造响应消息");
             responseMessage = MessageHandlerUtil.buildResponseMessage(map);
-            System.out.println(responseMessage);
             if(responseMessage.equals("")){
                 responseMessage ="未正确响应";
             }

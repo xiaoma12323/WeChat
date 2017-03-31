@@ -1,0 +1,34 @@
+{
+    "button": [
+        {
+            "name": "联系车主",
+            "type": "view",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "name": "联系我们",
+            "type": "view",
+            "url": "http://www.maluit.cn/WeChat"
+        },
+        {
+            "name": "我的信息",
+            "sub_button": [
+                {
+                    "key": "31",
+                    "name": "aaa",
+                    "type": "click"
+                },
+                {
+                    "key": "32",
+                    "name": "bbb",
+                    "type": "click"
+                },
+                {
+                    "key": "33",
+                    "name": "ccc",
+                    "type": "click"
+                }
+            ]
+        }
+    ]
+}

@@ -43,7 +43,6 @@ public class MessageHandlerUtil {
 
         // 遍历所有子节点
         for (Element e : elementList) {
-            System.out.println(e.getName() + "|" + e.getText());
             map.put(e.getName(), e.getText());
         }
 
@@ -515,8 +514,11 @@ public class MessageHandlerUtil {
      * @return
      */
     private static String handleEventMessage(Map<String, String> map) {
-        String responseMessage = buildWelcomeTextMessage(map);
-        return responseMessage;
+        String eventkey=map.get("Eventkey");
+        System.out.println(eventkey);
+        //String responseMessage = buildWelcomeTextMessage(map);
+        //return responseMessage;
+        return eventkey;
     }
 
 

@@ -1,4 +1,4 @@
-package cn.maluit.WeChat.menu;
+package menu.Obj;
 
 /**
  * view类型的菜单

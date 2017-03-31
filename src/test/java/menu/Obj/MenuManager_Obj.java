@@ -1,4 +1,4 @@
-package cn.maluit.WeChat.menu;
+package menu.Obj;
 
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
  * Created by mdy on 2017/3/30.
  */
 
-public class MenuManager {
-    private static Logger log = LoggerFactory.getLogger(MenuManager.class);
+public class MenuManager_Obj {
+    private static Logger log = LoggerFactory.getLogger(MenuManager_Obj.class);
 
     public static void main(String[] args) {
         // 调用接口获取access_token
@@ -34,8 +34,8 @@ public class MenuManager {
     }
 
 
-    // 菜单创建（POST） 限100（次/天）
-    public static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+    // 菜单创建（POST）
+    private static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
 
     /**
      * 创建菜单
@@ -78,7 +78,7 @@ public class MenuManager {
         ViewButton btn21=new ViewButton();
         btn21.setName("联系我们");
         btn21.setType("view");
-        btn21.setUrl("http://www.maluit.cn");
+        btn21.setUrl("http://www.maluit.cn/WeChat");
 
         CommonButton btn31 = new CommonButton();
         btn31.setName("aaa");

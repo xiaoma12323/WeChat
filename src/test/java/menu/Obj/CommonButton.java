@@ -1,4 +1,4 @@
-package cn.maluit.WeChat.menu;
+package menu.Obj;
 
 /**
  * 普通按钮（子按钮）

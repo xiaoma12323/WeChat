@@ -1,4 +1,4 @@
-package cn.maluit.WeChat.menu;
+package menu.Obj;
 
 /**
  * 菜单
