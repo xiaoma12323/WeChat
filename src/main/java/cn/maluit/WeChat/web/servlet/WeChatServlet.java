@@ -34,12 +34,10 @@ public class WeChatServlet extends HttpServlet {
         // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        System.out.println("请求进入");
         String responseMessage;
         try {
             //解析微信发来的请求,将解析后的结果封装成Map返回
             Map<String,String> map = MessageHandlerUtil.parseXml(request);
-            System.out.println("开始构造响应消息");
             responseMessage = MessageHandlerUtil.buildResponseMessage(map);
             if(responseMessage.equals("")){
                 responseMessage ="未正确响应";

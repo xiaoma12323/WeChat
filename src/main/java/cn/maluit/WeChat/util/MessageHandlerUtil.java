@@ -125,7 +125,7 @@ public class MessageHandlerUtil {
                                 "<Content><![CDATA[%s]]></Content>" +
                                 "</xml>",
                         fromUserName, toUserName, getMessageCreateTime(),
-                        "感谢您关注山西马路信息科技有限公司，请回复如下关键词来使用公众号提供的服务：\n文本\n图片\n语音\n视频\n音乐\n图文");
+                        "感谢您关注山西马路信息科技有限公司");
         return responseMessageXml;
     }
 
@@ -514,15 +514,15 @@ public class MessageHandlerUtil {
      */
     private static String handleEventMessage(Map<String, String> map) {
         //响应消息
-        String responseMessage="";
+        String responseMessage = "";
         //得到事件类型
-        String eventType=map.get("Event");
+        String eventType = map.get("Event");
         //事件类型
         EventType eventEnumType = EventType.valueOf(EventType.class, eventType.toUpperCase());
-        switch (eventEnumType){
+        switch (eventEnumType) {
             case SUBSCRIBE:
                 //处理订阅事件
-                responseMessage=buildWelcomeTextMessage(map);
+                responseMessage = buildWelcomeTextMessage(map);
                 break;
             case UNSUBSCRIBE:
                 //处理取消订阅事件
@@ -536,16 +536,21 @@ public class MessageHandlerUtil {
             case CLICK:
                 //处理菜单拉取消息事件
                 //事件Key值
-                String eventKey=map.get("EventKey");
-                switch (eventKey){
+                String eventKey = map.get("EventKey");
+                switch (eventKey) {
+                    case "20":
+                        String msgText = "山西马路信息技术有限公司\n" +
+                                "<a href=\"http://www.maluit.cn/WeChat\">马路信息</a>";
+                        responseMessage = buildTextMessage(map, msgText);
+                        break;
                     case "31":
-                        responseMessage=buildTextMessage(map,"事件1");
+                        responseMessage = buildTextMessage(map, "事件1");
                         break;
                     case "32":
-                        responseMessage=buildTextMessage(map,"事件2");
+                        responseMessage = buildTextMessage(map, "事件2");
                         break;
                     case "33":
-                        responseMessage=buildTextMessage(map,"事件3");
+                        responseMessage = buildTextMessage(map, "事件3");
                         break;
                     default:
                         break;

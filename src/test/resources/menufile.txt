@@ -3,12 +3,12 @@
         {
             "name": "联系车主",
             "type": "view",
-            "url": "http://www.baidu.com"
+            "url": "http://www.maluit.cn/WeChat"
         },
         {
             "name": "联系我们",
-            "type": "view",
-            "url": "http://www.maluit.cn/WeChat"
+            "type": "click",
+            "key": "20"
         },
         {
             "name": "我的信息",
