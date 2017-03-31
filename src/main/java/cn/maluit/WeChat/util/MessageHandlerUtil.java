@@ -524,7 +524,7 @@ public class MessageHandlerUtil {
                 //处理订阅事件
                 responseMessage=buildWelcomeTextMessage(map);
                 break;
-            case UNSUBCRIBE:
+            case UNSUBSCRIBE:
                 //处理取消订阅事件
                 break;
             case SCAN:

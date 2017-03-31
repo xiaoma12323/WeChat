@@ -7,7 +7,7 @@ package cn.maluit.WeChat.Common;
 public enum EventType {
 
     SUBSCRIBE,//订阅
-    UNSUBCRIBE,//取消订阅
+    UNSUBSCRIBE,//取消订阅
     SCAN,//扫描带参数的二维码
     LOCATION,//上报地理位置
     CLICK,//点击菜单拉取消息
