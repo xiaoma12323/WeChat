@@ -391,9 +391,9 @@ public class MessageHandlerUtil {
 //                String voiceMediaId = "";
 //                responseMessage = buildVoiceMessage(map, voiceMediaId);
 //                break;
-//            case "图文":
-//                responseMessage = buildNewsMessage(map);
-//                break;
+            case "图文":
+                responseMessage = buildNewsMessage(map);
+                break;
             case "音乐":
                 Music music = new Music();
                 music.title = "超级玛丽";
