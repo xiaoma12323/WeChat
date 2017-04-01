@@ -1,10 +1,6 @@
 package cn.maluit.WeChat.util;
 
-import cn.maluit.WeChat.Common.AccessTokenInfo;
-import cn.maluit.WeChat.entry.AccessToken;
-
 import cn.maluit.WeChat.web.servlet.AccessTokenServlet;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -16,6 +12,7 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import org.apache.http.HttpStatus;
+
 import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.net.HttpURLConnection;

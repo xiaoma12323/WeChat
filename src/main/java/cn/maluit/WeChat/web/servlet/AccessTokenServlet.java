@@ -3,6 +3,7 @@ package cn.maluit.WeChat.web.servlet;
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
 import cn.maluit.WeChat.util.NetWorkHelper;
+import cn.maluit.WeChat.util.PropertiesUtil;
 import cn.maluit.WeChat.util.WeChatApiUtil;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -10,6 +11,7 @@ import net.sf.json.JSONObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import java.util.Properties;
 
 /**
  * 用于获取accessToken的Servlet
@@ -65,8 +67,12 @@ public class AccessTokenServlet extends HttpServlet {
      * @return
      */
     public static AccessToken getToken() {
-        String appId = "wxddd6a4773cca9ff3";
-        String appSecret = "ac24c6bcd94c3ca27d7b69732bb67516";
+
+        //从properties文件中获取服务器凭证
+        Properties prop = PropertiesUtil.getPropperties("credential.properties");
+        String appId = prop.getProperty("appid");
+        String appSecret = prop.getProperty("appsecret");
+
         AccessToken token = null;
         String tockenUrl = WeChatApiUtil.getTokenUrl(appId, appSecret);
         JSONObject jsonObject = NetWorkHelper.httpsRequest(tockenUrl, "GET", null);
@@ -84,7 +90,6 @@ public class AccessTokenServlet extends HttpServlet {
         AccessTokenInfo.accessToken = token;
         return token;
     }
-
 
 
 //    /**
