@@ -2,6 +2,7 @@ package cn.maluit.WeChat.web.servlet;
 
 import cn.maluit.WeChat.Common.AccessTokenInfo;
 import cn.maluit.WeChat.entry.AccessToken;
+import cn.maluit.WeChat.util.JDBC;
 import cn.maluit.WeChat.util.NetWorkHelper;
 import cn.maluit.WeChat.util.PropertiesUtil;
 import cn.maluit.WeChat.util.WeChatApiUtil;
@@ -87,7 +88,15 @@ public class AccessTokenServlet extends HttpServlet {
                 token = null;// 获取token失败
             }
         }
+        //获取到的AccessToken存放在内存中
         AccessTokenInfo.accessToken = token;
+
+        //获取到的AccessToken存放在数据库中
+        try {
+            JDBC.saveAccessToken(token.getAccessToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return token;
     }
 
