@@ -9,6 +9,7 @@ import java.util.Properties;
 /**
  * Created by mi on 2017/4/1.
  */
+
 public class JDBC {
     /**
      * 将获取accesstoken存放数据库中
